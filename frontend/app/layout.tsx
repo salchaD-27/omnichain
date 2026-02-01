@@ -4,6 +4,7 @@ import "./globals.css";
 import Providers from "../wagmi/providers";
 import { WalletProvider } from "./context/WalletContext";
 import { AuthProvider } from "./context/AuthContext";
+import { AssetProvider } from "./context/AssetContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +28,9 @@ export default function RootLayout({children,}: Readonly<{children: React.ReactN
         <Providers>
           <WalletProvider>
             <AuthProvider>
-              {children}
+              <AssetProvider>
+                {children}
+              </AssetProvider>
             </AuthProvider>
           </WalletProvider>
         </Providers>

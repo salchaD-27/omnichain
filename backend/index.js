@@ -36,6 +36,7 @@ app.use(express.urlencoded({ extended: true }));
 // POST /api/auth/logout
 app.use('/api/auth', api_auth)
 // POST /api/asset/create
+// GET /api/asset/get
 app.use('/api/asset', api_asset)
 
 
