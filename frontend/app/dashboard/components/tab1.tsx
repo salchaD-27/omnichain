@@ -108,23 +108,19 @@ export default function Tab1() {
           ) : assets && assets.length > 0 ? (
             <div className="h-full w-full flex flex-row items-center justify-start overflow-x-auto">
               {assets.map((asset, index) => (
-                <div key={index} className="h-[90%] w-[25vw] mr-[10px] rounded bg-neutral-600 flex-shrink-0 mb-2 flex flex-col items-center justify-start p-4">
+                <div key={index} className="h-[90%] w-[25vw] mr-[10px] rounded bg-neutral-600 flex-shrink-0 mb-2 flex flex-col items-center justify-center p-4">
                   {asset.iconUrl && (
                     <img 
                       src={asset.iconUrl} 
                       alt={asset.metadata?.name || 'Asset'}
-                      className="w-20 h-20 rounded mb-2 object-cover"
+                      className="w-[90%] h-auto rounded mb-2 object-cover"
                       onError={(e) => {
                         (e.target as HTMLImageElement).style.display = 'none';
                       }}
                     />
                   )}
-                  <div className="text-white text-[18px] font-bold mb-2">
-                    {asset.metadata?.name || 'Unnamed Asset'}
-                  </div>
-                  <div className="text-gray-300 text-xs text-center mb-2 max-h-16 overflow-hidden">
-                    {asset.metadata?.description?.slice(0, 100) || 'No description'}
-                  </div>
+                  <div className="text-white text-[17px] font-bold mb-2">{asset.metadata?.name || 'Unnamed Asset'}</div>
+                  <div className="text-gray-300 text-[10px] text-center mb-2 max-h-16 overflow-hidden">{asset.metadata?.description?.slice(0, 100) || 'No description'}</div>                  
                   <div className={`text-xs px-3 py-1 rounded mb-2 ${
                     asset.assetState === 'Active' ? 'bg-green-600' :
                     asset.assetState === 'Drafted' ? 'bg-yellow-600' :

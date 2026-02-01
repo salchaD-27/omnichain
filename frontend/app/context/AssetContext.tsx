@@ -10,7 +10,7 @@ import { astarZkEVM } from 'viem/chains';
 
 
 export type AssetState = 'Drafted' | 'Active' | 'Inactive' | 'Deleted';
-const AssetState: string[] = ['Drafted', 'Active', 'Inactive', 'Deleted'];
+export const AssetStateArr: string[] = ['Drafted', 'Active', 'Inactive', 'Deleted'];
 
 export type AssetData = {
     owner: `0x${string}`,
@@ -63,13 +63,12 @@ export const AssetProvider = ({ children }: { children: React.ReactNode }) => {
             }
             const { assets } = await res.json();
             for(let i=0; i<assets.length; i++){
-                assets[i].assetState = AssetState[assets[i].assetState];
+                assets[i].assetState = AssetStateArr[assets[i].assetState];
                 assets[i].iconUrl = `https://ipfs.io/ipfs/${assets[i].ipfsThumbnailCID}`;
                 const res = await fetch(`https://gateway.lighthouse.storage/ipfs/${assets[i].filecoinMetadatCID}`)
                 const metadata = await res.json();
                 assets[i].metadata = {name: metadata.name, description: metadata.description, color: metadata.color, createdAt: metadata.createdAt}
             }
-            console.log(assets)
             setAssets(assets);
         } catch (err) {
             console.error('Error in fetchAssets:', err);
@@ -79,12 +78,7 @@ export const AssetProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     useEffect(()=>{
-        if (authenticatedAddress) {
-            console.log('Fetching assets for:', authenticatedAddress);
-            fetchAssets();
-        } else {
-            console.log('No authenticated address yet, skipping asset fetch');
-        }
+        if (authenticatedAddress) fetchAssets();
     }, [authenticatedAddress])
 
     return (

@@ -10,7 +10,12 @@ const __dirname = path.dirname(__filename);
 
 const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
 const wallet = new ethers.Wallet(process.env.WALLET_PRIVATE_KEY, provider);
-const ASSET_REGISTRY_DEPLOYED_ADDRESS = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512';
+
+const deployedAddressesPath = path.join(__dirname, '../../../hardhat/ignition/deployments/chain-31337/deployed_addresses.json');
+const deployedAddresses = JSON.parse(fs.readFileSync(deployedAddressesPath, 'utf8'));
+export const ASSET_REGISTRY_DEPLOYED_ADDRESS = deployedAddresses['AssetRegistryModule#AssetRegistry'];
+if (!ASSET_REGISTRY_DEPLOYED_ADDRESS) throw new Error('AssetRegistry address not found in deployed_addresses.json');
+
 const abiPath = path.join(__dirname, '../../../hardhat/artifacts/contracts/AssetRegistry.sol/AssetRegistry.json');
 const abi = JSON.parse(fs.readFileSync(abiPath, 'utf8'));
 export const contract = new ethers.Contract(ASSET_REGISTRY_DEPLOYED_ADDRESS, abi.abi, wallet);

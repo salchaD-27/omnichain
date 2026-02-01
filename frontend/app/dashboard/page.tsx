@@ -5,11 +5,12 @@ import { useRouter } from "next/navigation";
 import { useWallet } from "../context/WalletContext";
 import Tab2 from "./components/tab2";
 import Tab1 from "./components/tab1";
+import Tab0 from "./components/tab0";
 
 export default function Dashboard(){
     const router = useRouter();
     const { isAuthenticated, authenticatedAddress, isLoading, login, logout } = useAuth();
-    const [tab, setTab] = useState<number>(1);
+    const [tab, setTab] = useState<number>(2);
 
     useEffect(()=>{
         if(!isAuthenticated) router.push('/')
@@ -24,7 +25,7 @@ export default function Dashboard(){
             </div>
             <div className="h-[10vh] w-full flex items-center justify-center"></div>
             <div className="h-[90vh] w-full flex items-center justify-center">
-                {tab===0 && <></>}
+                {tab===0 && <Tab0/>}
                 {tab===1 && <Tab1/>}
                 {tab===2 && <Tab2/>}
             </div>

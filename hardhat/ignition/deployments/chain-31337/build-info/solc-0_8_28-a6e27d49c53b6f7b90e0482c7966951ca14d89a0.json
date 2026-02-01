@@ -1,0 +1,39 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_28-a6e27d49c53b6f7b90e0482c7966951ca14d89a0",
+  "solcVersion": "0.8.28",
+  "solcLongVersion": "0.8.28+commit.7893614a",
+  "userSourceNameMap": {
+    "contracts/AssetRegistry.sol": "project/contracts/AssetRegistry.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "cancun",
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode",
+            "evm.deployedBytecode",
+            "evm.methodIdentifiers",
+            "metadata"
+          ]
+        }
+      },
+      "remappings": []
+    },
+    "sources": {
+      "project/contracts/AssetRegistry.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.28;\n\ncontract AssetRegistry {\n    // data strucs\n    uint256 public assetNonce = 0;\n    enum AssetState {Drafted, Active, Inactive, Deleted}\n    struct AssetData {\n        address owner;\n        AssetState assetState;\n        string ipfsThumbnailCID;\n        string filecoinMetadatCID;\n        string arweaveHistoryCID;\n        bool crossChainSynced;\n    }\n    mapping(uint256 => AssetData) public registry;\n    mapping(address => uint256[]) private assetIdsByOwner;\n    uint256[] public allAssetIds;\n\n    // events\n    event AssetCreated(address owner, uint256 assetId, AssetState assetState);\n    event AssetDeleted(address owner, uint256 assetId);\n    event AssetOwnershipTransferred(uint256 assetId, address from, address to);\n\n    // funcs\n    function getAllAssetIds() public view returns (uint256[] memory) {return allAssetIds;}\n    function getAssetFromId(uint256 _assetId) public view returns (AssetData memory){return registry[_assetId];}\n    function getAssetsForAddress(address _address) public view returns (AssetData[] memory){\n        uint256[] storage ids = assetIdsByOwner[_address];\n        AssetData[] memory assets = new AssetData[](ids.length);\n        for (uint256 i = 0; i < ids.length; i++) {assets[i] = registry[ids[i]];}\n        return assets;\n    }\n    function createAsset(string memory _ipfsThumbnailCID, string memory _filecoinMetadatCID, string memory _arweaveHistoryCID) public {\n        uint256 assetId = assetNonce++;\n        require(registry[assetId].owner == address(0), \"Asset already exists\");\n        registry[assetId] = AssetData({\n            owner: msg.sender,\n            assetState: AssetState.Drafted,\n            ipfsThumbnailCID: _ipfsThumbnailCID,\n            filecoinMetadatCID: _filecoinMetadatCID,\n            arweaveHistoryCID: _arweaveHistoryCID,\n            crossChainSynced: false\n        });\n        assetIdsByOwner[msg.sender].push(assetId);\n        allAssetIds.push(assetId);\n        emit AssetCreated(msg.sender, assetId, AssetState.Drafted);\n    }\n    function deleteAsset(uint256 _assetId) public {\n        AssetData storage asset = registry[_assetId];\n        require(asset.owner != address(0), \"Asset does not exist\");\n        require(asset.owner == msg.sender, \"Not asset owner. Asset deletion not authorized\");\n        require(asset.assetState != AssetState.Deleted, \"Asset already deleted\");\n        asset.assetState = AssetState.Deleted;\n        emit AssetDeleted(msg.sender, _assetId);\n    }\n    function changeAssetOwner(uint256 _assetId, address _newOwner) public {\n        AssetData storage asset = registry[_assetId];\n        require(asset.owner != address(0), \"Asset does not exist\");\n        require(asset.assetState != AssetState.Deleted, \"Asset deleted. Cant tranfer ownership\");\n        require(asset.owner == msg.sender, \"Not asset owner. Ownership transfer not authorized\");\n        require(_newOwner != address(0), \"Invalid new owner\");\n        registry[_assetId].owner = _newOwner;\n        emit AssetOwnershipTransferred(_assetId, msg.sender, _newOwner);\n    }\n}"
+      }
+    }
+  }
+}

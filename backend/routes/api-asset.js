@@ -6,7 +6,7 @@ const { addMinutes } = require('date-fns');
 const { ethers } = require('ethers');
 const multer = require("multer");
 const { createAssetScript } = require('./utils/asset-create');
-const { getAssetsScript } = require('./utils/asset-get');
+const { getAssetsScript, getAllAssetsScript, getAssetFromIdScript } = require('./utils/asset-get');
 require('dotenv').config();
 
 const pool = new Pool({
@@ -28,7 +28,6 @@ router.post('/create', uploadIcon.single("icon"), async (req, res) => {
 
         const { name, description, color } = req.body;
         const icon = req.file;
-        console.log(req.body, icon);
         if (!icon) {return res.status(400).json({ error: "Icon file missing" });}
         const receipt = await createAssetScript(name, description, color, icon.buffer);
 
@@ -67,5 +66,70 @@ router.post('/get', async (req, res)=>{
         res.status(500).json({error: 'Server error: ' + err.message});
     }
 })
+
+router.get('/get-all', async (req, res) => {
+  try {
+    const sessionId = req.cookies?.session_id;
+    if (!sessionId) return res.status(401).json({ error: 'Not authenticated' });
+    const { rows } = await pool.query(
+      'SELECT * FROM sessions WHERE session_id=$1 AND expires_at > NOW()',
+      [sessionId]
+    );
+    if (rows.length === 0) return res.status(401).json({ error: 'Session expired' });
+
+    const assets = await getAllAssetsScript();
+
+    const jsonStringify = (obj) =>
+        JSON.stringify(obj, (_, value) =>
+            typeof value === 'bigint' ? value.toString() : value
+    );
+
+    res.setHeader('Content-Type', 'application/json');
+    res.send(
+      jsonStringify({
+        success: true,
+        assets
+      })
+    );
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: 'Server error: ' + err.message });
+  }
+});
+
+router.post('/get-id', async (req, res) => {
+  try {
+    const sessionId = req.cookies?.session_id;
+    if (!sessionId) return res.status(401).json({ error: 'Not authenticated' });
+    const { rows } = await pool.query(
+      'SELECT * FROM sessions WHERE session_id=$1 AND expires_at > NOW()',
+      [sessionId]
+    );
+    if (rows.length === 0) return res.status(401).json({ error: 'Session expired' });
+
+    const { assetId } = req.body;
+    const asset = await getAssetFromIdScript(assetId);
+
+    if (!asset) {
+      return res.status(404).json({ error: 'Asset not found' });
+    }
+
+    const jsonStringify = (obj) =>
+        JSON.stringify(obj, (_, value) =>
+            typeof value === 'bigint' ? value.toString() : value
+    );
+
+    res.setHeader('Content-Type', 'application/json');
+    res.send(
+      jsonStringify({
+        success: true,
+        asset
+      })
+    );
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: 'Server error: ' + err.message });
+  }
+});
 
 module.exports = router;

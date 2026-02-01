@@ -15,6 +15,7 @@ contract AssetRegistry {
     }
     mapping(uint256 => AssetData) public registry;
     mapping(address => uint256[]) private assetIdsByOwner;
+    uint256[] public allAssetIds;
 
     // events
     event AssetCreated(address owner, uint256 assetId, AssetState assetState);
@@ -22,6 +23,7 @@ contract AssetRegistry {
     event AssetOwnershipTransferred(uint256 assetId, address from, address to);
 
     // funcs
+    function getAllAssetIds() public view returns (uint256[] memory) {return allAssetIds;}
     function getAssetFromId(uint256 _assetId) public view returns (AssetData memory){return registry[_assetId];}
     function getAssetsForAddress(address _address) public view returns (AssetData[] memory){
         uint256[] storage ids = assetIdsByOwner[_address];
@@ -41,6 +43,7 @@ contract AssetRegistry {
             crossChainSynced: false
         });
         assetIdsByOwner[msg.sender].push(assetId);
+        allAssetIds.push(assetId);
         emit AssetCreated(msg.sender, assetId, AssetState.Drafted);
     }
     function deleteAsset(uint256 _assetId) public {
