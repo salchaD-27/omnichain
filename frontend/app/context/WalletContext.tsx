@@ -47,7 +47,7 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Add isAnchorChain safely
   const myChain: Chain | undefined = chain
-    ? { ...chain, isAnchorChain: chain.id === 11155111 } // ethereum sepolia as anchor
+    ? { ...chain, isAnchorChain: chain.id === 31337 } // hardhat localhost as anchor
     : undefined;
 
   // Async signMessage wrapper

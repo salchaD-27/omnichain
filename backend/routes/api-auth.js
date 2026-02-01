@@ -1,11 +1,10 @@
-import express from 'express'
+const express = require('express');
 // import jwt from 'jsonwebtoken';
-import { Pool } from 'pg';
-import { randomBytes } from 'crypto';
-import { addMinutes } from 'date-fns';
-import { ethers } from 'ethers';
-import dotenv from 'dotenv';
-dotenv.config();
+const { Pool } = require('pg');
+const { randomBytes } = require('crypto');
+const { addMinutes } = require('date-fns');
+const { ethers } = require('ethers');
+require('dotenv').config();
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -34,7 +33,7 @@ const onetime = async () => {
     console.error('Error creating table:', err);
   }
 }
-await onetime();
+onetime().catch(console.error);
 
 async function insertNonceRecord({address, nonce, expiresAt, used}){
     const query = `
@@ -136,4 +135,5 @@ router.post('/logout', async (req,res) => {
     res.status(500).json({ error: 'Server error' });
   }
 })
-export default router;
+
+module.exports = router;

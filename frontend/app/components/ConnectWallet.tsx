@@ -44,7 +44,7 @@ export default function ConnectWallet(){
         {chain && !chain.isAnchorChain && (
             <div className="mt-4 text-yellow-400 text-[20px] text-center">
             ⚠️ Wrong network<br />
-            Please switch to Ethereum Sepolia
+            Please switch to Hardhat Localhost
             </div>
         )}
         {/* --------- WALLET ACTIONS --------- */}
@@ -61,8 +61,8 @@ export default function ConnectWallet(){
             {!isLoading && !isAuthenticated && (
             <button
                 className="px-[20px] py-[6px] rounded bg-white text-black text-[17px] hover:opacity-70"
-                onClick={() => login(address!)}
-                disabled={!chain?.isAnchorChain}
+                onClick={() => {console.log('click');login(address!)}}
+                // disabled={!chain?.isAnchorChain}
             >
                 Sign in
             </button>

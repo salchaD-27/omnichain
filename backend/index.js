@@ -1,12 +1,11 @@
 // npm install express cors dotenv jsonwebtoken date-fns pg
-import express from 'express';
+const express = require('express');
 const app = express()
-import cors from 'cors';
-// const authjs = require('./routes/auth.js')
-import api_wallet_siwe from './routes/api-wallet-siwe.js'
-import cookieParser from 'cookie-parser';
-import dotenv from 'dotenv'
-dotenv.config()
+const cors = require('cors');
+const api_auth = require('./routes/api-auth.js');
+const api_asset = require('./routes/api-asset.js');
+const cookieParser = require('cookie-parser');
+require('dotenv').config()
 
 // frontend - localhost:3000
 // backend - localhost:3001
@@ -33,8 +32,11 @@ app.use(express.urlencoded({ extended: true }));
 
 // POST /api/auth/nonce-record
 // POST /api/auth/verify-sign
-// POST /api/auth/user
-app.use('/api/auth', api_wallet_siwe)
+// GET /api/auth/user
+// POST /api/auth/logout
+app.use('/api/auth', api_auth)
+// POST /api/asset/create
+app.use('/api/asset', api_asset)
 
 
 app.listen(PORT, ()=>{console.log(`backend server running at http://localhost:${PORT}`)})
