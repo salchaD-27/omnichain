@@ -1,0 +1,82 @@
+services:
+  # Hardhat Local Node
+  hardhat:
+    build:
+      context: ./hardhat
+      dockerfile: Dockerfile
+    container_name: omnichain-hardhat
+    ports:
+      - "8545:8545"
+    networks:
+      - omnichain-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8545"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: omnichain-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: omnichain
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - omnichain-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API Server
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: omnichain-backend
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/omnichain
+      - NODE_ENV=development
+      - PORT=3001
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      hardhat:
+        condition: service_healthy
+    networks:
+      - omnichain-network
+    restart: on-failure
+
+  # Frontend Next.js App
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: omnichain-frontend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:3001
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - omnichain-network
+    restart: on-failure
+
+networks:
+  omnichain-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+

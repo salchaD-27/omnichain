@@ -1,241 +1,40 @@
-############################
-# OS / System files
-############################
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
 
-# macOS
-.DS_Store
-.AppleDouble
-.LSOverride
-Icon?
-._*
+# Build outputs
+.next/
+out/
+build/
+dist/
 
-# Windows
-Thumbs.db
-Thumbs.db:encryptable
-ehthumbs.db
-ehthumbs_vista.db
-Desktop.ini
-$RECYCLE.BIN/
+# Environment files
+.env
+.env.local
+.env.*.local
 
-# Linux
-*~
-
-############################
-# Editor / IDE files
-############################
-
-# VS Code
-.vscode/
-!.vscode/extensions.json
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-
-# JetBrains (IntelliJ, PyCharm, WebStorm, etc.)
+# IDE
 .idea/
-*.iml
-
-# Vim
+.vscode/
 *.swp
 *.swo
-*.swn
-.vim/
 
-# Emacs
-*~
-\#*\#
-.\#*
+# OS
+.DS_Store
+Thumbs.db
 
-# Sublime Text
-*.sublime-workspace
-*.sublime-project
-
-############################
-# Logs & debugging
-############################
-
+# Logs
+logs/
 *.log
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-debug.log
 
-############################
-# Environment variables / secrets
-############################
-
-.env
-.env.*
-!.env.example
-!.env.template
-
-############################
-# Dependencies
-############################
-
-# Node / JavaScript
-node_modules/
-jspm_packages/
-bower_components/
-
-# Python
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-.Python
-pip-log.txt
-pip-delete-this-directory.txt
-.pytest_cache/
-.coverage
-htmlcov/
-.tox/
-.venv/
-venv/
-ENV/
-env/
-
-# Ruby
-.bundle/
-vendor/bundle/
-Gemfile.lock
-
-# Java / JVM
-*.class
-*.jar
-*.war
-*.ear
-target/
-.gradle/
-build/
-
-# Go
-bin/
-pkg/
-*.exe
-*.test
-*.out
-
-############################
-# Build / output artifacts
-############################
-
-dist/
-build/
-out/
-coverage/
-.tmp/
-.cache/
-.parcel-cache/
-.next/
-.nuxt/
-.svelte-kit/
-.vite/
-
-############################
-# Databases & local data
-############################
-
-*.sqlite
-*.sqlite3
-*.db
-*.dump
-*.sql
-data/
-storage/
-
-############################
-# Uploaded / generated files
-############################
-
-uploads/
-media/
-public/uploads/
-tmp/
-temp/
-
-############################
 # Docker
-############################
+.docker/
 
-docker-compose.override.yml
-*.pid
+# Test coverage
+coverage/
 
-############################
-# Terraform
-############################
-
-.terraform/
-*.tfstate
-*.tfstate.*
-crash.log
-
-############################
 # Misc
-############################
+*.tsbuildinfo
 
-# Backup files
-*.bak
-*.backup
-*.old
-
-# Lock files (uncomment if you don’t want them tracked)
-# package-lock.json
-# yarn.lock
-# pnpm-lock.yaml
-# poetry.lock
-
-############################
-# Ignore everything in these folders except README
-############################
-
-**/README.md
-# frontend/
-
-
-
-
-
-
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-frontend//node_modules
-frontend//.pnp
-frontend/.pnp.*
-frontend/.yarn/*
-frontend/!.yarn/patches
-frontend/!.yarn/plugins
-frontend/!.yarn/releases
-frontend/!.yarn/versions
-
-# testing
-frontend//coverage
-
-# next.js
-frontend//.next/
-frontend//out/
-
-# production
-frontend//build
-
-# misc
-frontend/.DS_Store
-frontend/*.pem
-
-# debug
-frontend/npm-debug.log*
-frontend/yarn-debug.log*
-frontend/yarn-error.log*
-frontend/.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-frontend/.env*
-   
-# vercel
-frontend/.vercel
-
-# typescript
-frontend/*.tsbuildinfo
-frontend/next-env.d.ts

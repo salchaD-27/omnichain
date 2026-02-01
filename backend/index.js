@@ -10,10 +10,11 @@ require('dotenv').config()
 // frontend - localhost:3000
 // backend - localhost:3001
 const PORT = process.env.PORT || 3001;
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 
 // allowing reqs from frontend origin
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: FRONTEND_URL,
   credentials: true, // if using cookies or auth headers
   allowedHeaders: ['Authorization', 'Content-Type'],
 }));
