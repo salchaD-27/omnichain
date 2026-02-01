@@ -21,6 +21,7 @@ type Asset = {
     }
     id: number,
 }
+
 export default function Tab0(){
     const router = useRouter();
     const [assets, setAsstes] = useState<Asset[] | null>(null);
@@ -55,15 +56,15 @@ export default function Tab0(){
                 <div key={idx} className="h-[77px] w-[90%] mb-[7px] py-[10px] flex-shrink-0 flex flex-row items-center justify-center rounded bg-neutral-500 text-[15px]">
                     <div className="h-full w-1/8 flex items-center justify-center">
                     {asset.ipfsThumbnailCID && (
-                    <img 
-                      src={`https://ipfs.io/ipfs/${asset.ipfsThumbnailCID}`}
-                      alt={asset.ipfsThumbnailCID || 'Asset Icon'}
-                      className="w-auto h-[90%] rounded object-cover object-center"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = 'none';
-                      }}
-                    />
-                  )}
+                        <img 
+                        src={`https://ipfs.io/ipfs/${asset.ipfsThumbnailCID}`}
+                        alt={asset.ipfsThumbnailCID || 'Asset Icon'}
+                        className="w-auto h-[90%] rounded object-cover object-center"
+                        onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = 'none';
+                        }}
+                        />
+                    )}
                     </div>
                     <div className="h-full w-1/8 flex items-center justify-center">{asset.owner?.substring(0, 4)}...{asset.owner?.substring(asset.owner.length - 4)}</div>
                     <div className="h-full w-3/8 flex items-center justify-center">{asset.metadata?.name}</div>

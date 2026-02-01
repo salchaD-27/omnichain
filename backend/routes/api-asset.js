@@ -107,12 +107,9 @@ router.post('/get-id', async (req, res) => {
     );
     if (rows.length === 0) return res.status(401).json({ error: 'Session expired' });
 
-    const { assetId } = req.body;
-    const asset = await getAssetFromIdScript(assetId);
-
-    if (!asset) {
-      return res.status(404).json({ error: 'Asset not found' });
-    }
+    const { id } = req.body;
+    const asset = await getAssetFromIdScript(id);
+    if (!asset) {return res.status(404).json({ error: 'Asset not found' });}
 
     const jsonStringify = (obj) =>
         JSON.stringify(obj, (_, value) =>

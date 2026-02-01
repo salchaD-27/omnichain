@@ -48,9 +48,8 @@ export async function getAllAssetsScript() {
         const assetIds = await contract.getAllAssetIds();
         const assets = [];
         for (const id of assetIds) {
-            let asset = await contract.getAssetFromId(id);
-            asset = [...asset, id];
-            assets.push(formatAsset(asset));
+            const asset = await contract.getAssetFromId(id);
+            assets.push(formatAsset(asset, id));
         }
         return assets;
     } catch (err) {
@@ -61,24 +60,23 @@ export async function getAllAssetsScript() {
 
 export async function getAssetFromIdScript(assetId) {
     try {
-        let asset = await contract.getAssetFromId(assetId);
-        asset = [...asset, assetId];
-        return formatAsset(asset);
+        const asset = await contract.getAssetFromId(assetId);
+        return formatAsset(asset, assetId);
     } catch (err) {
         console.error('Error fetching asset:', err.message);
         return null;
     }
 }
 
-function formatAsset(asset) {
-    console.log(asset);
+function formatAsset(asset, id = undefined) {
     const owner = asset.owner || asset[0];
     const assetState = asset.assetState !== undefined ? asset.assetState : (asset[1] !== undefined ? Number(asset[1]) : 0);
     const ipfsThumbnailCID = asset.ipfsThumbnailCID || asset[2] || '';
     const filecoinMetadatCID = asset.filecoinMetadatCID || asset[3] || '';
     const arweaveHistoryCID = asset.arweaveHistoryCID || asset[4] || '';
     const crossChainSynced = asset.crossChainSynced !== undefined ? asset.crossChainSynced : (asset[5] !== undefined ? asset[5] : false);
-    const id = Number(asset.id) || undefined;
+    // id is at index 6 in the contract return, or passed as parameter
+    const assetId = id !== undefined ? Number(id) : (asset.id !== undefined ? Number(asset.id) : (asset[6] !== undefined ? Number(asset[6]) : undefined));
     return {
         owner: owner,
         assetState: assetState,
@@ -86,6 +84,6 @@ function formatAsset(asset) {
         filecoinMetadatCID: filecoinMetadatCID,
         arweaveHistoryCID: arweaveHistoryCID,
         crossChainSynced: crossChainSynced,
-        id: id
+        id: assetId
     };
 }
