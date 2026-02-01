@@ -60,7 +60,7 @@ export default function AssetPage() {
                     />
                 )}
             </div>
-            <h1 className="text-4xl font-bold mt-4">Asset: {asset.metadata?.name}</h1>
+            <h1 className="text-4xl mt-4">Asset: <strong>{asset.metadata?.name}</strong></h1>
             <p className="mt-4">Desc: <strong>{asset.metadata?.description}</strong></p>
             <p className="mt-2"></p>
             <p className="mt-2">Created: <strong>{asset.metadata?.createdAt}</strong></p>
